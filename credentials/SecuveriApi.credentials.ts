@@ -9,8 +9,8 @@ import type {
 export class SecuveriApi implements ICredentialType {
 	name = 'secuveriApi';
 
-	// eslint-disable-next-line n8n-nodes-base/cred-class-field-display-name-miscased
-	displayName = 'secuveri API';
+	// Title case is required by n8n's verification scan; elsewhere the brand stays lowercase.
+	displayName = 'Secuveri API';
 
 	icon: Icon = { light: 'file:../icons/secuveri.svg', dark: 'file:../icons/secuveri.dark.svg' };
 
