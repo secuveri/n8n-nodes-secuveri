@@ -1,6 +1,6 @@
 {
   "name": "n8n-nodes-secuveri",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "secuveri for n8n: start identity verifications, screen people against sanctions lists, manage block and allow lists and react to verification results.",
   "license": "MIT",
   "homepage": "https://secuveri.com/integrations",

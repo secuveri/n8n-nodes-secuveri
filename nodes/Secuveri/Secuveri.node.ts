@@ -1,4 +1,10 @@
-import { NodeConnectionTypes, type INodeType, type INodeTypeDescription } from 'n8n-workflow';
+import {
+	NodeConnectionTypes,
+	type ILoadOptionsFunctions,
+	type INodePropertyOptions,
+	type INodeType,
+	type INodeTypeDescription,
+} from 'n8n-workflow';
 
 export class Secuveri implements INodeType {
 	description: INodeTypeDescription = {
@@ -78,20 +84,7 @@ export class Secuveri implements INodeType {
 				default: '',
 				description:
 					'A published workflow of your organization. Choose from the list, or specify an ID using an <a href="https://docs.n8n.io/code/expressions/">expression</a>.',
-				typeOptions: {
-					loadOptions: {
-						routing: {
-							request: { method: 'GET', url: '/v1/workflows' },
-							output: {
-								postReceive: [
-									{ type: 'rootProperty', properties: { property: 'workflows' } },
-									{ type: 'setKeyValue', properties: { name: '={{$responseItem.name}}', value: '={{$responseItem.id}}' } },
-									{ type: 'sort', properties: { key: 'name' } },
-								],
-							},
-						},
-					},
-				},
+				typeOptions: { loadOptionsMethod: 'getWorkflows' },
 				displayOptions: { show: { resource: ['verification'], operation: ['create'] } },
 				routing: { send: { type: 'body', property: 'workflow_id' } },
 			},
@@ -366,5 +359,23 @@ export class Secuveri implements INodeType {
 				],
 			},
 		],
+	};
+
+	methods = {
+		loadOptions: {
+			// Builds the full URL from the credential, so the list also loads when the
+			// node runs as an AI agent tool.
+			async getWorkflows(this: ILoadOptionsFunctions): Promise<INodePropertyOptions[]> {
+				const credentials = await this.getCredentials('secuveriApi');
+				const response = (await this.helpers.httpRequestWithAuthentication.call(this, 'secuveriApi', {
+					method: 'GET',
+					url: `${credentials.baseUrl as string}/v1/workflows`,
+					json: true,
+				})) as { workflows: { id: string; name: string }[] };
+				return response.workflows
+					.map((w) => ({ name: w.name, value: w.id }))
+					.sort((a, b) => a.name.localeCompare(b.name));
+			},
+		},
 	};
 }
