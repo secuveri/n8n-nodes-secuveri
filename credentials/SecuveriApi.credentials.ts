@@ -9,7 +9,6 @@ import type {
 export class SecuveriApi implements ICredentialType {
 	name = 'secuveriApi';
 
-	// The brand is written in lowercase (secuveri), also in titles.
 	// eslint-disable-next-line n8n-nodes-base/cred-class-field-display-name-miscased
 	displayName = 'secuveri API';
 

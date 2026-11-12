@@ -30,4 +30,8 @@ jobs:
         run: test "v$(node -p "require('./package.json').version")" = "${GITHUB_REF_NAME}"
       # Lint, build and tests ran above; prepublishOnly (n8n-node prerelease) only
       # guards against publishing by hand.
+      # Trusted publishing (OIDC) when it is set up on npmjs.com; otherwise the
+      # NPM_TOKEN repository secret (needed once, for the very first release).
       - run: npm publish --provenance --access public --ignore-scripts
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
