@@ -1,0 +1,59 @@
+{
+  "name": "n8n-nodes-secuveri",
+  "version": "0.1.0",
+  "description": "secuveri for n8n: start identity verifications, screen people against sanctions lists, manage block and allow lists and react to verification results.",
+  "license": "MIT",
+  "homepage": "https://secuveri.com/integrations",
+  "keywords": [
+    "n8n-community-node-package",
+    "secuveri",
+    "identity verification",
+    "kyc",
+    "aml",
+    "age verification"
+  ],
+  "author": {
+    "name": "secuveri GmbH",
+    "email": "hello@secuveri.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/secuveri/n8n-nodes-secuveri.git"
+  },
+  "scripts": {
+    "build": "n8n-node build",
+    "lint": "n8n-node lint",
+    "lint:fix": "n8n-node lint --fix",
+    "test": "node --test test/*.test.js",
+    "prepublishOnly": "n8n-node prerelease"
+  },
+  "files": [
+    "dist",
+    "!dist/tsconfig.tsbuildinfo",
+    "!dist/**/*.map"
+  ],
+  "n8n": {
+    "n8nNodesApiVersion": 1,
+    "strict": true,
+    "credentials": [
+      "dist/credentials/SecuveriApi.credentials.js"
+    ],
+    "nodes": [
+      "dist/nodes/Secuveri/Secuveri.node.js",
+      "dist/nodes/Secuveri/SecuveriTrigger.node.js"
+    ]
+  },
+  "devDependencies": {
+    "@n8n/node-cli": "1.0.0",
+    "eslint": "9.29.0",
+    "n8n-workflow": "2.48.1",
+    "prettier": "3.6.2",
+    "typescript": "5.9.3"
+  },
+  "peerDependencies": {
+    "n8n-workflow": "*"
+  },
+  "bugs": {
+    "url": "https://github.com/secuveri/n8n-nodes-secuveri/issues"
+  }
+}

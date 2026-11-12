@@ -1,0 +1,33 @@
+# Publishes n8n-nodes-secuveri to npm with a provenance statement (required by
+# n8n for verified community nodes). Runs on tags like v0.1.0.
+# npm trusted publishing: on npmjs.com, add this repository and workflow file as
+# a trusted publisher of n8n-nodes-secuveri; no token is stored.
+name: Publish n8n node
+
+on:
+  push:
+    tags: ["v*.*.*"]
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          registry-url: https://registry.npmjs.org
+      - run: npm install -g npm@11
+      - run: npm ci --ignore-scripts
+      - run: npm run lint
+      - run: npm run build
+      - run: npm test
+      - name: Tag matches package version
+        run: test "v$(node -p "require('./package.json').version")" = "${GITHUB_REF_NAME}"
+      # Lint, build and tests ran above; prepublishOnly (n8n-node prerelease) only
+      # guards against publishing by hand.
+      - run: npm publish --provenance --access public --ignore-scripts
